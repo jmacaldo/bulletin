@@ -1,0 +1,35 @@
+<head>
+  <title>Random Country Geneerator</title>
+</head>
+
+
+<script
+src="http://maps.googleapis.com/maps/api/js?key=AIzaSyD6CQbAgP0APNDpOWlIiFxVV2utT-OQFZs">
+</script>
+
+<script>
+function initialize() {
+  var mapProp = {
+    center:new google.maps.LatLng(<%=result[rand].latlng[0]%>,<%=result[rand].latlng[1]%>),
+    zoom:6,
+    mapTypeId:google.maps.MapTypeId.ROADMAP
+  };
+  var map=new google.maps.Map(document.getElementById("googleMap"), mapProp);
+}
+google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+
+<h1><%= result[rand].name %></h1>
+
+<h3>
+  Capital: <%= result[rand].capital %>
+</h3>
+
+
+<span>
+  Population: <%=result[rand].population.toLocaleString()%></br>
+  Region: <%= result[rand].region %> > <%= result[rand].subregion %>
+</span>
+
+
+<div id="googleMap" style="width:400px;height:400px"></div>
