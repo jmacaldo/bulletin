@@ -10,13 +10,13 @@ app.use(parser.json());
 app.use(parser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 
-const configuration = 'postgres://postgres:lOk(9Ow,Ce1q@localhost/bulletinboard';
+const configuration = 'postgres://' + process.env.POSTGRES_USER + ':' + process.env.POSTGRES_PASSWORD + '@localhost/bulletinboard';
 const pool = new pg.Pool(typeof configuration === 'string' ? parseConnectionString.parse(configuration) : configuration);
 
 app.set('view engine', 'ejs');
 
 
-//main router
+//main view
 app.get('/', function(req, res) {
   pool.connect(function(err, client, done) {
     client.query('select * from messages', function(err, result) {
@@ -26,15 +26,7 @@ app.get('/', function(req, res) {
   });
 }); // router close
 
-
-//post page
- app.get('/post', function(req,res){
-
-   res.render('post', {});
-
- }); //router close
-
- //submit button
+//submit button
 app.post('/add', function(req,res){
   pool.connect(function(err, client, done) {
     client.query(`insert into messages (title,body) values ($1, $2)`,[req.body.title,req.body.message]);
@@ -43,10 +35,22 @@ app.post('/add', function(req,res){
       });
   }); //router close
 
-app.post('/delete', function(req, res) {
+//delete all
+app.delete('/delete', function(req, res) {
   pool.connect(function(err, client, done) {
     client.query('delete from messages', function(err, result) {
-      res.redirect('/');
+      res.sendStatus(200);
+      done();
+      });
+  });
+}); // router close
+
+
+//delete by message id
+app.delete('/delete/:id', function(req, res) {
+  pool.connect(function(err, client, done) {
+    client.query('delete from messages where id = $1',[req.params.id], function(err, result) {
+      res.sendStatus(200);
       done();
       });
   });

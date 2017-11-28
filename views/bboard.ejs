@@ -3,56 +3,75 @@
 <% include header.ejs %>
 </head>
 
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 left">
+          <p id="headText" class="d-inline-block">bulletin.app</p>
+          <p id="tagLine">a simple app bulletin board based on node.js and postgres</p>
 
-
-<div class="container">
-  <div class="page-header">
-    <h4 class="d-inline-block">Bulletin Board</h4>
-    <form class="d-inline-block" action="/post" method="get">
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" >Submit a message</button>
-    </form>
-  </div>
-
-  <% for (var i = 0; i < result.length; i++) { %>
-      <div class="well">
-        <button type="button" class="close" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-        </button>
-        <h4><%= result[i].title %></h4>
-        <p><%= result[i].body %></p>
-      </div>
-  <% } %>
-
-  <form action="/delete" method="post">
-    <input type="submit" value="Erase all messages" class="btn btn-danger" />
-  </form>
-
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-
-      <div class="modal-body">
-        <form action="/add" method="post">
-          <div class="form-group">
-              <label>Message title</label>
-              <input type="text" class="form-control" name="title" >
+          <div id="btns">
+            <div class="btnBlock">
+              <button type="button" class="btn btn-warning btn-circle btn-xl" data-toggle="modal" data-target="#postMsg"><i class="glyphicon glyphicon-pencil"></i></button>
             </div>
-          <div class="form-group">
-             <label>Enter your message below</label>
-             <textarea class="form-control" name="message" rows="3"></textarea>
+            <div class="btnBlock">
+              <form action="/delete" method="post">
+                <button type="submit" class="btn btn-danger btn-circle btn-xl glyphicon glyphicon-remove delAll" />
+              </form>
+            </div>
+
+
+
+
+
           </div>
-          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-          <form action="/add" method="post">
-          <input type="submit" value="Submit" class="btn btn-primary" />
-        </form>
 
 
-      </div>
 
+        </div>
+        <div class="col-md-6 right">
+
+        <%# loop through and display all messages in DB%>
+          <% for (var i = 0; i < result.length; i++) { %>
+              <div class="well">
+                <button type="button" class="close delMsg" aria-label="Close" data-id="<%= result[i].id %>">
+                <span aria-hidden="true">&times;</span>
+                </button>
+                <p id="msgTitle"><%= result[i].title %></p>
+                <p id="msgBody"><%= result[i].body %></p>
+              </div>
+          <% } %>
+
+        <%# delete all button%>
+
+
+        <%# post message bootstrap modal%>
+        <div class="modal fade" id="postMsg" tabindex="-1" role="dialog" aria-labelledby="postMsgLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+              <div class="modal-body">
+                <form action="/add" method="post">
+                  <div class="form-group">
+                      <label>Message title</label>
+                      <input type="text" class="form-control" name="title" >
+                    </div>
+                  <div class="form-group">
+                     <label>Enter your message below</label>
+                     <textarea class="form-control" name="message" rows="3"></textarea>
+                  </div>
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  <form action="/add" method="post">
+                  <input type="submit" value="Submit" class="btn btn-default" />
+                </form>
+
+
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+        <% include footer.ejs %>
+        </div>
     </div>
-  </div>
-
 </div>
-</div>
-
-<% include footer.ejs %>
